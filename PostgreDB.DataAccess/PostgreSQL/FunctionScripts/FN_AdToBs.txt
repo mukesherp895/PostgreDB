@@ -1,0 +1,54 @@
+﻿CREATE OR REPLACE FUNCTION demo_webapi1."FN_AdToBs"(
+	engdate date,
+	format integer)
+    RETURNS character varying
+    LANGUAGE 'plpgsql'
+    --COST 100
+    --VOLATILE PARALLEL UNSAFE
+AS $BODY$
+	DECLARE bsDate VARCHAR(10);
+			engMonthDays VARCHAR(2);
+BEGIN
+	SELECT (engdate - DT."EngStartDate")+1 INTO engMonthDays
+	FROM
+		DEMO_WEBAPI1."DateMaps" AS DT
+	WHERE
+		(DT."BsYear" || DT."BsMonth") = (
+			SELECT
+				("BsYear" || "BsMonth")
+			FROM
+				DEMO_WEBAPI1."DateMaps"
+			WHERE
+				engdate >= "EngStartDate"
+			ORDER BY "EngStartDate" DESC
+			LIMIT 1
+		)
+	LIMIT 1;
+
+	IF LENGTH(engMonthDays)=1 THEN
+		engMonthDays := '0' || engMonthDays;
+	END IF;
+
+	IF FORMAT = 1 THEN
+		SELECT 
+			DT."BsYear" || '-' || DT."BsMonth" || '-' || engMonthDays INTO bsDate
+		FROM 
+			demo_webapi1."DateMaps" AS DT
+		WHERE 
+			(DT."BsYear" || DT."BsMonth") = (
+				SELECT
+					("BsYear" || "BsMonth")
+				FROM
+					DEMO_WEBAPI1."DateMaps"
+				WHERE
+					engdate >= "EngStartDate"
+				ORDER BY "EngStartDate" DESC
+				LIMIT 1
+			)
+		LIMIT 1;
+		RETURN bsDate;
+	ELSE
+		RETURN 'Format Not Implemation';
+	END IF;
+END;
+$BODY$;
