@@ -1,4 +1,6 @@
-﻿CREATE OR REPLACE FUNCTION demo_webapi1."FN_DateMap"(pFiscalYear VARCHAR)
+﻿--Return mannual table
+
+CREATE OR REPLACE FUNCTION demo_webapi1."FN_DateMap"(pFiscalYear VARCHAR)
 RETURNS TABLE (
 	Id integer,
     BsFiscalYear character varying(9),
@@ -14,3 +16,11 @@ BEGIN
 	RETURN QUERY SELECT * FROM demo_webapi1."DateMaps" WHERE "BsFiscalYear"=pFiscalYear ORDER BY "BsYear","BsMonth";
 END;
 $$ LANGUAGE 'plpgsql';
+
+
+--Returns Existing Table
+
+CREATE OR REPLACE FUNCTION demo_webapi1."FN_ReturnExistTable"(pFiscalYear VARCHAR) 
+	RETURNS SETOF demo_webapi1."DateMaps" AS $$
+    SELECT * FROM demo_webapi1."DateMaps" WHERE "BsFiscalYear"=pFiscalYear;
+$$ LANGUAGE SQL;
