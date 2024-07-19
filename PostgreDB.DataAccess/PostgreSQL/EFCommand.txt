@@ -1,0 +1,2 @@
+Add-Migration initialCreate -Context PostgreDBContext1 -OutPutDir Migratoins1
+Update-Database -Context PostgreDBContext1
