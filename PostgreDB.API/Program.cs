@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<PostgreDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("pgConn"), x => x.MigrationsHistoryTable("_EfMigrations", builder.Configuration.GetSection("DbSchema").GetSection("pgSchema").Value)));
+//builder.Services.AddDbContext<PostgreDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("pgConn"), x => x.MigrationsHistoryTable("_EfMigrations", builder.Configuration.GetSection("DbSchema").GetSection("pgSchema").Value)));
+builder.Services.AddDbContext<PostgreDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("pgConn2"), x => x.MigrationsHistoryTable("_EfMigrations", builder.Configuration.GetSection("DbSchema").GetSection("pgSchema2").Value)));
 
 //builder.Services.AddDbContext<PostgreDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("pgConn")));
 
