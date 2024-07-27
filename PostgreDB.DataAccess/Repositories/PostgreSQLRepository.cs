@@ -20,7 +20,6 @@ namespace PostgreDB.DataAccess.Repositories
         Task TriggerTest(GLIndexDto dto, CancellationToken cancellationToken);
         Task TriggerUpdateTest(GLIndexUpdateDto dto, CancellationToken cancellationToken);
     }
-
     public class PostgreSQLRepository : IPostgreSQLRepository
     {
         private readonly PostgreDBContext _dBContext;
