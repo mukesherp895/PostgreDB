@@ -17,11 +17,11 @@ namespace PostgreDB.DataAccess
             {
                 throw new ArgumentNullException(nameof(options), "DbContextOptions must not be null.");
             }
-            if (configuration.GetSection("DbSchema") == null || configuration.GetSection("DbSchema").GetSection("pgSchema").Value == null)
+            if (configuration.GetSection("DbSchema") == null || configuration.GetSection("DbSchema").GetSection("pgSchema2").Value == null)
             {
                 throw new ArgumentNullException(nameof(options), "Schema must not be null.");
             }
-            schema = configuration.GetSection("DbSchema").GetSection("pgSchema").Value ?? "";
+            schema = configuration.GetSection("DbSchema").GetSection("pgSchema2").Value ?? "";
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -30,7 +30,6 @@ namespace PostgreDB.DataAccess
             builder.ApplyConfiguration(new DateMapConfig());
             //this.Database.SqlQueryRaw<string>("test").ToList();
         }
-        
         public DbSet<DateMaps> DateMaps { get; set; }
         public DbSet<GLIndex> GLIndexs { get; set; }
         public DbSet<GLIndexDetail> GLIndexDetails { get; set; }
