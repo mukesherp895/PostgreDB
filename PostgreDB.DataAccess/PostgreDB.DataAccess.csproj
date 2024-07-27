@@ -7,14 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="PostgreSQL\FunctionScripts\FunReturnTable.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="PostgreSQL\FunctionScripts\FunReturnTable.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

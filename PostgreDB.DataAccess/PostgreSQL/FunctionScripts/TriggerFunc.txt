@@ -1,0 +1,50 @@
+create or replace function demo_webapi1.func_glindex_inserted()
+returns trigger as $$
+begin
+	raise notice '%', new."Status"; 
+	raise notice '%', TG_OP; 
+	if (TG_OP = 'INSERT') and (new."Status" = 1) and (new."IsTrigger" = false) then
+		raise notice '%', 'Insert Condition'; 
+		INSERT INTO demo_webapi1."GLIndexDetails" ("Amount", "Debit", "Credit","RefId")
+		select 
+			"Amount",
+			case when "Amount" > 0 then "Amount" else 0 end,
+			case when "Amount" < 0 then "Amount" else 0 end,
+			"Id"
+		from demo_webapi1."GLIndexs" where "Id" = new."Id";
+		update demo_webapi1."GLIndexs" set "IsTrigger" = true where "Id" = new."Id";
+	--end if;
+
+	elseif (TG_OP = 'UPDATE') and (new."Status" = 1) and exists(select "RefId" from demo_webapi1."GLIndexDetails" 
+		where "RefId" = new."Id" limit 1) and (new."IsTrigger" = false) then 
+		raise notice '%', 'Update Condition';
+		delete from demo_webapi1."GLIndexDetails" where "RefId" = new."Id";
+		INSERT INTO demo_webapi1."GLIndexDetails" ("Amount", "Debit", "Credit","RefId")
+		select 
+			"Amount",
+			case when "Amount" > 0 then "Amount" else 0 end,
+			case when "Amount" < 0 then "Amount" else 0 end,
+			"Id"
+		from demo_webapi1."GLIndexs" where "Id" = new."Id";
+		--update demo_webapi1."GLIndexs" set "IsTrigger" = true where "Id" = new."Id";
+	--end if;
+
+	elseif (TG_OP = 'UPDATE') and (new."Status" = 1) and not exists(select "RefId" from demo_webapi1."GLIndexDetails" 
+		where "RefId" = new."Id" limit 1) and (new."IsTrigger" = false) then 
+		raise notice '%', 'Update exiting check Condition';
+		--delete from demo_webapi1."GLIndexDetails" where "RefId" = new."Id";
+		INSERT INTO demo_webapi1."GLIndexDetails" ("Amount", "Debit", "Credit","RefId")
+		select 
+			"Amount",
+			case when "Amount" > 0 then "Amount" else 0 end,
+			case when "Amount" < 0 then "Amount" else 0 end,
+			"Id"
+		from demo_webapi1."GLIndexs" where "Id" = new."Id";
+		update demo_webapi1."GLIndexs" set "IsTrigger" = true where "Id" = new."Id";
+	end if;
+	return new;
+end;
+$$ language plpgsql;
+
+
+

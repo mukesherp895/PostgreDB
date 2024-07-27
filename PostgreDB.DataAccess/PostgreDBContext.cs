@@ -32,5 +32,8 @@ namespace PostgreDB.DataAccess
         }
         
         public DbSet<DateMaps> DateMaps { get; set; }
+        public DbSet<GLIndex> GLIndexs { get; set; }
+        public DbSet<GLIndexDetail> GLIndexDetails { get; set; }
+        public DbSet<GLIndexPost> GLIndexPost { get; set; }
     }
 }

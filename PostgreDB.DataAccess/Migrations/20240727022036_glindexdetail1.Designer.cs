@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PostgreDB.DataAccess;
@@ -11,9 +12,11 @@ using PostgreDB.DataAccess;
 namespace PostgreDB.DataAccess.Migrations
 {
     [DbContext(typeof(PostgreDBContext))]
-    partial class PostgreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240727022036_glindexdetail1")]
+    partial class glindexdetail1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,28 +244,6 @@ namespace PostgreDB.DataAccess.Migrations
                     b.ToTable("GLIndexDetails", "demo_webapi1");
                 });
 
-            modelBuilder.Entity("PostgreDB.Model.DomainModels.GLIndexPost", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("GLIndexId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GLIndexId");
-
-                    b.ToTable("GLIndexPost", "demo_webapi1");
-                });
-
             modelBuilder.Entity("PostgreDB.Model.DomainModels.Users", b =>
                 {
                     b.Property<string>("Id")
@@ -376,22 +357,6 @@ namespace PostgreDB.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PostgreDB.Model.DomainModels.GLIndexPost", b =>
-                {
-                    b.HasOne("PostgreDB.Model.DomainModels.GLIndex", "GLIndex")
-                        .WithMany("GLIndexPosts")
-                        .HasForeignKey("GLIndexId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GLIndex");
-                });
-
-            modelBuilder.Entity("PostgreDB.Model.DomainModels.GLIndex", b =>
-                {
-                    b.Navigation("GLIndexPosts");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PostgreDB.DataAccess;
@@ -11,9 +12,11 @@ using PostgreDB.DataAccess;
 namespace PostgreDB.DataAccess.Migrations
 {
     [DbContext(typeof(PostgreDBContext))]
-    partial class PostgreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240727110751_glindexdetail2")]
+    partial class glindexdetail2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

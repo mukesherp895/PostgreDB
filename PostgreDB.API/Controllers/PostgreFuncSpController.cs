@@ -41,5 +41,31 @@ namespace PostgreDB.API.Controllers
                 return Ok(new List<DateMaps>());
             }
         }
+        [HttpPost("TriggerTest")]
+        public async Task<IActionResult> TriggerTest(GLIndexDto dto ,CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _postgreSQLRepository.TriggerTest(dto,cancellationToken);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost("TriggerUpdateTest")]
+        public async Task<IActionResult> TriggerUpdateTest(GLIndexUpdateDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _postgreSQLRepository.TriggerUpdateTest(dto, cancellationToken);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

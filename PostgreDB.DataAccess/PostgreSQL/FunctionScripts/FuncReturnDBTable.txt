@@ -1,0 +1,4 @@
+CREATE OR REPLACE FUNCTION demo_webapi1."FN_ReturnExistTable"(pFiscalYear VARCHAR) 
+	RETURNS SETOF demo_webapi1."DateMaps" AS $$
+    SELECT * FROM demo_webapi1."DateMaps" WHERE "BsFiscalYear"=pFiscalYear;
+$$ LANGUAGE SQL;
