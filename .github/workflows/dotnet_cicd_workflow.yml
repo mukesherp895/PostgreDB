@@ -43,3 +43,43 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+  deploy-on-windows:
+    runs-on: windows-latest
+    needs: build-on-windows
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Upload published files
+        uses: actions/upload-artifact@v3
+        with:
+          name: publish
+          path: ./publish
+
+      - name: Setup PowerShell
+        uses: actions/setup-powershell@v2
+
+      - name: Stop IIS site
+        env:
+          MSDEPLOY_USERNAME: ${{ secrets.MSDEPLOY_USERNAME }}
+          MSDEPLOY_PASSWORD: ${{ secrets.MSDEPLOY_PASSWORD }}
+          MSDEPLOY_SERVER: ${{ secrets.MSDEPLOY_SERVER }}
+        run: |
+          pwsh -Command "Invoke-Command -ComputerName $env:MSDEPLOY_SERVER -ScriptBlock { param (\$siteName) . { ./Stop-IIS.ps1 -siteName \$siteName } -ArgumentList 'TestMB' } -Credential (New-Object PSCredential('$env:MSDEPLOY_USERNAME', (ConvertTo-SecureString '$env:MSDEPLOY_PASSWORD' -AsPlainText -Force)))"
+
+      - name: Deploy to IIS
+        env:
+          MSDEPLOY_USERNAME: ${{ secrets.MSDEPLOY_USERNAME }}
+          MSDEPLOY_PASSWORD: ${{ secrets.MSDEPLOY_PASSWORD }}
+          MSDEPLOY_SERVER: ${{ secrets.MSDEPLOY_SERVER }}
+        run: |
+          pwsh -Command "Invoke-Command -ComputerName $env:MSDEPLOY_SERVER -ScriptBlock { param (\$sourcePath) . { msdeploy -verb:sync -source:package=\$sourcePath -dest:auto,computerName=$env:MSDEPLOY_SERVER,username=$env:MSDEPLOY_USERNAME,password=$env:MSDEPLOY_PASSWORD,authType=Basic,siteName='TestMB' } -ArgumentList './publish.zip' } -Credential (New-Object PSCredential('$env:MSDEPLOY_USERNAME', (ConvertTo-SecureString '$env:MSDEPLOY_PASSWORD' -AsPlainText -Force)))"
+
+      - name: Start IIS site
+        env:
+          MSDEPLOY_USERNAME: ${{ secrets.MSDEPLOY_USERNAME }}
+          MSDEPLOY_PASSWORD: ${{ secrets.MSDEPLOY_PASSWORD }}
+          MSDEPLOY_SERVER: ${{ secrets.MSDEPLOY_SERVER }}
+        run: |
+          pwsh -Command "Invoke-Command -ComputerName $env:MSDEPLOY_SERVER -ScriptBlock { param (\$siteName) . { ./Start-IIS.ps1 -siteName \$siteName } -ArgumentList 'TestMB' } -Credential (New-Object PSCredential('$env:MSDEPLOY_USERNAME', (ConvertTo-SecureString '$env:MSDEPLOY_PASSWORD' -AsPlainText -Force)))"
